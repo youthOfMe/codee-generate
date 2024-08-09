@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 public class Login implements Callable<Integer> {
-    @Option(names = {"-u", "--user"}, description = "User name")
+    @Option(names = {"-u", "--user"}, description = "User name", required = true)
     String user;
 
     @Option(names = {"-p", "--password"}, arity = "0..1", description = "Passphrase", interactive = true, required = true)
@@ -22,7 +22,7 @@ public class Login implements Callable<Integer> {
     }
 
     public static void main(String[] args) {
-        String[] strings = CheckUtil.checkParam(new String[]{"-p", "-cp", "666"});
+        String[] strings = CheckUtil.checkParam(new String[]{"-p", "56", "-cp", "666", "-u", "123"});
         System.out.println(Arrays.toString(strings));
         // new CommandLine(new Login()).execute(strings);
     }
