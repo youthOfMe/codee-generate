@@ -5,8 +5,7 @@ import cn.hutool.core.util.ReflectUtil;
 import picocli.CommandLine;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class CheckUtil {
 
@@ -21,15 +20,15 @@ public class CheckUtil {
 
         Field[] fields = ReflectUtil.getFields(Login.class);
         List<CommandLine.Option> annotationList = new ArrayList<>();
+        // 把所有命令填到hashSet中优化效率
+        Set<String> orderSet = new HashSet<>();
         // 遍历所有字段获取到注解数组
         for (Field field : fields) {
             CommandLine.Option annotation = field.getAnnotation(CommandLine.Option.class);
             annotationList.add(annotation);
+            orderSet.add(annotation.names()[0]);
         }
-        /**
-         * required == ture
-         * interact == true
-         */
+
         for (int i = 0; i < annotationList.size(); i++) {
             CommandLine.Option option = annotationList.get(i);
             if (option.required()) {
@@ -51,13 +50,7 @@ public class CheckUtil {
                         // 判断一下args还有值吗
                         if (index < args.length) {
                             // 遍历一遍是不是命令值
-                            boolean isOrder = false;
-                            for (CommandLine.Option option1 : annotationList) {
-                                if (option1.names()[0].equals(args[index])) {
-                                    isOrder = true;
-                                    break;
-                                }
-                            }
+                            boolean isOrder = orderSet.contains(args[index]);
                             if (!isOrder) {
                                 argsList.add(args[index]);
                             }
@@ -80,18 +73,14 @@ public class CheckUtil {
                         if (args.length == index) {
                             throw new RuntimeException("必须要有" + option.names()[0]);
                         }
-                        // 遍历一遍是不是命令值
-                        for (CommandLine.Option option1 : annotationList) {
-                            if (option1.names()[0].equals(args[index])) {
-                                throw new RuntimeException("必须要有" + option.names()[0]);
-                            }
+                        boolean isOrder = orderSet.contains(args[index]);
+                        if (isOrder) {
+                            throw new RuntimeException("必须要有" + option.names()[0]);
                         }
                         argsList.add(args[index]);
                     } else {
                         throw new RuntimeException("必须要有" + option.names()[0]);
                     }
-
-
                 }
             }
 
