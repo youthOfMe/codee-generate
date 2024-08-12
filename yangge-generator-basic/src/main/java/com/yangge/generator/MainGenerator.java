@@ -33,7 +33,9 @@ public class MainGenerator {
         // 2. 复制动态文件
         // 指定模板文件所在的路径
         String dynamicInputPath = projectPath + File.separator + "yangge-generator-basic" + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
-        String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yangge/acm/MainTemplate.java";
+        // String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yangge/acm/MainTemplate.java";
+        String dynamicOutputPath = outputPath + File.separator + "acm-template/src/com/yangge/acm/MainTemplate.java";
+
 
         DynamicGenerator.doGenerate(dynamicInputPath, dynamicOutputPath, model);
     }
