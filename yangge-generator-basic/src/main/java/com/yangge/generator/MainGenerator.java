@@ -12,7 +12,14 @@ import java.io.IOException;
 public class MainGenerator {
 
     public static void main(String[] args) throws TemplateException, IOException {
+        // 数据模型
+        MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
+        mainTemplateConfig.setLoop(false);
 
+        doGenerate(mainTemplateConfig);
+    }
+
+    public static void doGenerate(Object model) throws TemplateException, IOException {
         // 1. 静态文件生成
         String projectPath = System.getProperty("user.dir");
         // 输入路径
@@ -21,20 +28,9 @@ public class MainGenerator {
         String outputPath = projectPath;
         // 复制
         StaticGenerator.copyFileByHutool(inputPath, outputPath);
-
-        // 数据模型
-        MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
-        mainTemplateConfig.setLoop(false);
-
-        doGenerate(inputPath, outputPath, mainTemplateConfig);
-    }
-
-    public static void doGenerate(String inputPath, String outputPath, Object model) throws TemplateException, IOException {
         // 1. 复制静态文件
         StaticGenerator.copyFileByHutool(inputPath, outputPath);
         // 2. 复制动态文件
-        String projectPath = System.getProperty("user.dir");
-
         // 指定模板文件所在的路径
         String dynamicInputPath = projectPath + File.separator + "yangge-generator-basic" + File.separator + "src/main/resources/templates/MainTemplate.java.ftl";
         String dynamicOutputPath = projectPath + File.separator + "acm-template/src/com/yangge/acm/MainTemplate.java";
